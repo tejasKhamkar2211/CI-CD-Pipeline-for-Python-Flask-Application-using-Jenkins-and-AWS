@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Play with Friend</title>
+</head>
+<body>
+    <h2>Tic Tac Toe - vs Friend</h2>
+    <p>Current Player: {{ current_player }}</p>
+    <form method="POST">
+        <input type="hidden" name="current_player" value="{{ current_player }}">
+        <div style="display: grid; grid-template-columns: repeat(3, 50px);">
+            {% for i in range(9) %}
+                <input type="hidden" name="board" value="{{ board[i] }}">
+                <button name="move" value="{{ i }}" {% if board[i] != '' %}disabled{% endif %}>
+                    {{ board[i] }}
+                </button>
+            {% endfor %}
+        </div>
+    </form>
+    <a href="/"><button>Home</button></a>
+</body>
+</html>
+

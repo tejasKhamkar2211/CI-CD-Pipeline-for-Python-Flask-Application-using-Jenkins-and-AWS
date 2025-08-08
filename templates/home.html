@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: url("/static/images/neon-bg.jpeg") no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.7);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .container {
+      z-index: 2;
+      position: relative;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      color: #00f7ff;
+      text-shadow: 0 0 20px #00f7ff;
+      margin-bottom: 50px;
+    }
+
+    .btn {
+      background-color: transparent;
+      border: 2px solid #00f7ff;
+      color: #00f7ff;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      margin: 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #00f7ff, 0 0 40px #00f7ff;
+    }
+
+    .btn:hover {
+      background-color: #00f7ff;
+      color: #000;
+      box-shadow: 0 0 20px #00f7ff, 0 0 60px #00f7ff;
+    }
+
+    /* Floating animation particles */
+    .floating {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: #00f7ff;
+      border-radius: 50%;
+      animation: floatUp 10s linear infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(50px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <!-- Particle animation -->
+  {% for i in range(15) %}
+    <div class="floating" style="left: {{ (i * 7) % 100 }}vw; animation-delay: {{ i }}s;"></div>
+  {% endfor %}
+
+  <div class="container">
+    <h1>Tic Tac Toe</h1>
+    <a href="/play/computer"><button class="btn">🤖 Play with Computer</button></a>
+    <a href="/play/friends"><button class="btn">👬 Play with Friend</button></a>
+  </div>
+</body>
+</html>

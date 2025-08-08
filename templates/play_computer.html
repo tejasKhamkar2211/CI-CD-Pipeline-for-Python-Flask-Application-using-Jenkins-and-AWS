@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play with Computer</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: sans-serif;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .home-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: #00f7ff;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 0 15px #00f7ff;
+            transition: 0.3s;
+        }
+
+        .home-btn:hover {
+            background: #00f7ff;
+            color: #000;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-top: 80px;
+            text-shadow: 0 0 10px #ff00c8;
+        }
+
+        #status {
+            text-align: center;
+            color: white;
+            margin: 20px;
+            font-size: 1.2rem;
+        }
+
+        #play-again {
+            display: none;
+            margin: 10px auto 0;
+            background-color: #00f7ff;
+            color: #000;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00f7ff;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #play-again:hover {
+            background-color: #fff;
+        }
+
+        table {
+            margin: auto;
+            border-spacing: 15px;
+        }
+
+        td {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 2px solid #00f7ff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #00f7ff;
+            cursor: pointer;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 60px;
+            font-weight: bold;
+            text-shadow: 0 0 15px #00f7ff;
+            color: #00f7ff;
+        }
+
+        .o-icon {
+            color: #ff006a;
+            text-shadow: 0 0 15px #ff006a;
+        }
+
+        .button-wrapper {
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Go to Home button -->
+    <a class="home-btn" href="/">🏠 Go to Home</a>
+
+    <!-- Title -->
+    <h2>Play with Computer</h2>
+    <p id="status"></p>
+
+    <!-- Game Grid -->
+    <table>
+        <tr>
+            <td onclick="makeMove(0)"></td>
+            <td onclick="makeMove(1)"></td>
+            <td onclick="makeMove(2)"></td>
+        </tr>
+        <tr>
+            <td onclick="makeMove(3)"></td>
+            <td onclick="makeMove(4)"></td>
+            <td onclick="makeMove(5)"></td>
+        </tr>
+        <tr>
+            <td onclick="makeMove(6)"></td>
+            <td onclick="makeMove(7)"></td>
+            <td onclick="makeMove(8)"></td>
+        </tr>
+    </table>
+
+    <!-- Play Again Button -->
+    <div class="button-wrapper">
+        <button id="play-again" onclick="resetGame()">🔄 Play Again</button>
+    </div>
+
+    <script>
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let gameOver = false;
+
+        function makeMove(index) {
+            if (board[index] || gameOver) return;
+            board[index] = "X";
+            updateBoard();
+            fetch('/api/computer_move', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ board: board })
+            })
+            .then(res => res.json())
+            .then(data => {
+                board = data.board;
+                updateBoard();
+                if (data.winner) {
+                    gameOver = true;
+                    document.getElementById("status").innerText =
+                        data.winner === "Draw" ? "It's a draw!" : data.winner + " wins!";
+                    document.getElementById("play-again").style.display = "inline-block";
+                }
+            });
+        }
+
+        function updateBoard() {
+            document.querySelectorAll('td').forEach((cell, i) => {
+                if (board[i] === "X") {
+                    cell.innerHTML = `<span style="color:#00f7ff;">✖</span>`;
+                } else if (board[i] === "O") {
+                    cell.innerHTML = `<span class="o-icon">◯</span>`;
+                } else {
+                    cell.innerHTML = "";
+                }
+            });
+        }
+
+        function resetGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            gameOver = false;
+            updateBoard();
+            document.getElementById("status").innerText = "";
+            document.getElementById("play-again").style.display = "none";
+        }
+    </script>
+</body>
+</html>
+
